@@ -2,7 +2,7 @@ package in.system.studentmanagement.domain;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Data
 @Entity
