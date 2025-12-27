@@ -122,16 +122,18 @@ public class CourseServiceImpl implements CourseService {
     public void deactivateCourse(Long id) {
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ServiceException("Course not found with id " + id));
-        course.setIsActive(false);
+        course.setIsActive(course.getIsActive() != null && !course.getIsActive());
         courseRepository.save(course);
     }
 
     private CourseDTO mapToCourseDTO(Course course) {
         CourseDTO dto = modelMapper.map(course, CourseDTO.class);
-        if (course.getCoordinatorTeacher() != null) {
-            dto.setCoordinatorTeacherId(course.getCoordinatorTeacher().getId());
-            dto.setCoordinatorTeacherName(course.getCoordinatorTeacher().getFirstName() + " " +
-                    course.getCoordinatorTeacher().getLastName());
+        if (course != null && course.getCoordinatorTeacher() != null) {
+            Teacher teacher = course.getCoordinatorTeacher();
+            dto.setCoordinatorTeacherId(teacher.getId());
+            if (teacher.getFirstName() != null && teacher.getLastName() != null) {
+                dto.setCoordinatorTeacherName(teacher.getFirstName() + " " + teacher.getLastName());
+            }
         }
         return dto;
     }
