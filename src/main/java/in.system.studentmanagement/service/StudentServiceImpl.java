@@ -192,7 +192,7 @@ public class StudentServiceImpl implements StudentService {
     public void deactivateStudent(Long id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new ServiceException("Student not found with id " + id));
-        student.setIsActive(false);
+        student.setIsActive(!student.getIsActive());
         student.setUpdatedAt(LocalDateTime.now());
         studentRepository.save(student);
     }
