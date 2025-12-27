@@ -107,7 +107,7 @@ public class TeacherServiceImpl implements TeacherService {
     public void deactivateTeacher(Long id) {
         Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new ServiceException("Teacher not found with id " + id));
-        teacher.setIsActive(false);
+        teacher.setIsActive(!teacher.getIsActive());
         teacherRepository.save(teacher);
     }
 }
