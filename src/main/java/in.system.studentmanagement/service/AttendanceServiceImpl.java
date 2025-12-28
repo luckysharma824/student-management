@@ -144,8 +144,43 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     private AttendanceDTO mapToAttendanceDTO(Attendance attendance) {
         AttendanceDTO dto = modelMapper.map(attendance, AttendanceDTO.class);
+        dto.setStudentCode(attendance.getStudent().getCode());
         dto.setStudentName(attendance.getStudent().getFirstName() + " " + attendance.getStudent().getLastName());
+        dto.setCourseCode(attendance.getCourse().getCode());
         dto.setCourseName(attendance.getCourse().getName());
         return dto;
+    }
+
+    // Code-based method implementations
+    @Override
+    @Transactional(readOnly = true)
+    public List<AttendanceDTO> getAttendanceByStudentCode(String studentCode) {
+        Student student = studentRepository.findByCode(studentCode)
+                .orElseThrow(() -> new ServiceException("Student not found with code: " + studentCode));
+        return getAttendanceByStudentId(student.getId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AttendanceDTO> getAttendanceByStudentCodeAndSemester(String studentCode, Integer semester) {
+        Student student = studentRepository.findByCode(studentCode)
+                .orElseThrow(() -> new ServiceException("Student not found with code: " + studentCode));
+        return getAttendanceByStudentAndSemester(student.getId(), semester);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<AttendanceDTO> getAttendanceByCourseCode(String courseCode) {
+        Course course = courseRepository.findByCode(courseCode)
+                .orElseThrow(() -> new ServiceException("Course not found with code: " + courseCode));
+        return getAttendanceByCourseId(course.getId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Double getAttendancePercentageByCode(String studentCode, Integer semester) {
+        Student student = studentRepository.findByCode(studentCode)
+                .orElseThrow(() -> new ServiceException("Student not found with code: " + studentCode));
+        return getAttendancePercentage(student.getId(), semester);
     }
 }

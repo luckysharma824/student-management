@@ -44,6 +44,12 @@ public class CourseController {
         return new ResponseEntity<>(course, HttpStatus.OK);
     }
 
+    @GetMapping("/code/{courseCode}")
+    public ResponseEntity<Object> getCourseByCode(@PathVariable String courseCode) {
+        CourseDTO course = courseService.getCourseByCode(courseCode);
+        return new ResponseEntity<>(course, HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<Object> getAllCourses() {
         List<CourseDTO> courses = courseService.getAllCourses();

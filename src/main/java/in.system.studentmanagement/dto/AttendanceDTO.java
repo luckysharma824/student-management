@@ -15,10 +15,12 @@ public class AttendanceDTO {
 
     @NotNull(message = "Student ID is required")
     private Long studentId;
+    private String studentCode;
     private String studentName;
 
     @NotNull(message = "Course ID is required")
     private Long courseId;
+    private String courseCode;
     private String courseName;
 
     @NotNull(message = "Attendance date is required")

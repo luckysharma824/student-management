@@ -10,6 +10,8 @@ public interface CourseService {
 
     CourseDTO getCourseById(Long id);
 
+    CourseDTO getCourseByCode(String code);
+
     List<CourseDTO> getAllCourses();
 
     List<CourseDTO> getActiveCourses();

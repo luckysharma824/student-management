@@ -39,15 +39,15 @@ public class GradeServiceImpl implements GradeService {
 
     @Override
     public GradeDTO createGrade(GradeDTO gradeDTO) {
-        Student student = studentRepository.findById(gradeDTO.getStudentId())
+        Student student = studentRepository.findByCode(gradeDTO.getStudentCode())
                 .orElseThrow(() -> new ServiceException("Student not found"));
 
-        Course course = courseRepository.findById(gradeDTO.getCourseId())
+        Course course = courseRepository.findByCode(gradeDTO.getCourseCode())
                 .orElseThrow(() -> new ServiceException("Course not found"));
 
         // Check if grade already exists for this combination
         if (gradeRepository.findByStudentIdAndCourseIdAndSemester(
-                gradeDTO.getStudentId(), gradeDTO.getCourseId(), gradeDTO.getSemester()).isPresent()) {
+                student.getId(), course.getId(), gradeDTO.getSemester()).isPresent()) {
             throw new ServiceException("Grade already exists for this student and course in this semester");
         }
 
@@ -186,12 +186,63 @@ public class GradeServiceImpl implements GradeService {
 
     private GradeDTO mapToGradeDTO(Grade grade) {
         GradeDTO dto = modelMapper.map(grade, GradeDTO.class);
+        dto.setStudentCode(grade.getStudent().getCode());
         dto.setStudentName(grade.getStudent().getFirstName() + " " + grade.getStudent().getLastName());
+        dto.setCourseCode(grade.getCourse().getCode());
         dto.setCourseName(grade.getCourse().getName());
         if (grade.getAssignedBy() != null) {
             dto.setTeacherId(grade.getAssignedBy().getId());
             dto.setTeacherName(grade.getAssignedBy().getFirstName() + " " + grade.getAssignedBy().getLastName());
         }
         return dto;
+    }
+
+    // Code-based method implementations
+    @Override
+    @Transactional(readOnly = true)
+    public List<GradeDTO> getGradesByStudentCode(String studentCode) {
+        Student student = studentRepository.findByCode(studentCode)
+                .orElseThrow(() -> new ServiceException("Student not found with code: " + studentCode));
+        return getGradesByStudentId(student.getId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GradeDTO> getGradesByStudentCodeAndSemester(String studentCode, Integer semester) {
+        Student student = studentRepository.findByCode(studentCode)
+                .orElseThrow(() -> new ServiceException("Student not found with code: " + studentCode));
+        return getGradesByStudentAndSemester(student.getId(), semester);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GradeDTO> getGradesByCourseCode(String courseCode) {
+        Course course = courseRepository.findByCode(courseCode)
+                .orElseThrow(() -> new ServiceException("Course not found with code: " + courseCode));
+        return getGradesByCourseId(course.getId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<GradeDTO> getGradesByCourseCodeAndSemester(String courseCode, Integer semester) {
+        Course course = courseRepository.findByCode(courseCode)
+                .orElseThrow(() -> new ServiceException("Course not found with code: " + courseCode));
+        return getGradesByCourseAndSemester(course.getId(), semester);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Double getStudentAverageGradeByCode(String studentCode) {
+        Student student = studentRepository.findByCode(studentCode)
+                .orElseThrow(() -> new ServiceException("Student not found with code: " + studentCode));
+        return getStudentAverageGrade(student.getId());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Double getStudentSemesterGPAByCode(String studentCode, Integer semester) {
+        Student student = studentRepository.findByCode(studentCode)
+                .orElseThrow(() -> new ServiceException("Student not found with code: " + studentCode));
+        return getStudentSemesterGPA(student.getId(), semester);
     }
 }

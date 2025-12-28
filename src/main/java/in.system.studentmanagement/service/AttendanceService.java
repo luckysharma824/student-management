@@ -26,4 +26,13 @@ public interface AttendanceService {
     List<AttendanceDTO> getAttendanceByDateRange(LocalDate startDate, LocalDate endDate, Integer semester);
 
     void deleteAttendance(Long id);
+
+    // Code-based methods
+    List<AttendanceDTO> getAttendanceByStudentCode(String studentCode);
+
+    List<AttendanceDTO> getAttendanceByStudentCodeAndSemester(String studentCode, Integer semester);
+
+    List<AttendanceDTO> getAttendanceByCourseCode(String courseCode);
+
+    Double getAttendancePercentageByCode(String studentCode, Integer semester);
 }

@@ -25,4 +25,17 @@ public interface GradeService {
     void deleteGrade(Long id);
 
     GradeDTO calculateAndAssignGrade(Long studentId, Long courseId, Integer semester);
+
+    // Code-based methods
+    List<GradeDTO> getGradesByStudentCode(String studentCode);
+
+    List<GradeDTO> getGradesByStudentCodeAndSemester(String studentCode, Integer semester);
+
+    List<GradeDTO> getGradesByCourseCode(String courseCode);
+
+    List<GradeDTO> getGradesByCourseCodeAndSemester(String courseCode, Integer semester);
+
+    Double getStudentAverageGradeByCode(String studentCode);
+
+    Double getStudentSemesterGPAByCode(String studentCode, Integer semester);
 }
