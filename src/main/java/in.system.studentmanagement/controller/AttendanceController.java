@@ -45,36 +45,37 @@ public class AttendanceController {
         return new ResponseEntity<>(attendance, HttpStatus.OK);
     }
 
-    @GetMapping("/student/{studentId}")
-    public ResponseEntity<Object> getAttendanceByStudent(@PathVariable Long studentId) {
-        List<AttendanceDTO> attendances = attendanceService.getAttendanceByStudentId(studentId);
+    @GetMapping("/student/{studentCode}")
+    public ResponseEntity<Object> getAttendanceByStudent(@PathVariable String studentCode) {
+        List<AttendanceDTO> attendances = attendanceService.getAttendanceByStudentCode(studentCode);
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("total", attendances.size());
-        response.put("studentId", studentId);
+        response.put("studentCode", studentCode);
         response.put("data", attendances);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/student/{studentId}/semester/{semester}")
-    public ResponseEntity<Object> getAttendanceByStudentAndSemester(@PathVariable Long studentId,
+    @GetMapping("/student/{studentCode}/semester/{semester}")
+    public ResponseEntity<Object> getAttendanceByStudentAndSemester(@PathVariable String studentCode,
             @PathVariable Integer semester) {
-        List<AttendanceDTO> attendances = attendanceService.getAttendanceByStudentAndSemester(studentId, semester);
-        Double percentage = attendanceService.getAttendancePercentage(studentId, semester);
+        List<AttendanceDTO> attendances = attendanceService.getAttendanceByStudentCodeAndSemester(studentCode,
+                semester);
+        Double percentage = attendanceService.getAttendancePercentageByCode(studentCode, semester);
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("total", attendances.size());
-        response.put("studentId", studentId);
+        response.put("studentCode", studentCode);
         response.put("semester", semester);
         response.put("attendancePercentage", String.format("%.2f%%", percentage));
         response.put("data", attendances);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/course/{courseId}")
-    public ResponseEntity<Object> getAttendanceByCourse(@PathVariable Long courseId) {
-        List<AttendanceDTO> attendances = attendanceService.getAttendanceByCourseId(courseId);
+    @GetMapping("/course/{courseCode}")
+    public ResponseEntity<Object> getAttendanceByCourse(@PathVariable String courseCode) {
+        List<AttendanceDTO> attendances = attendanceService.getAttendanceByCourseCode(courseCode);
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("total", attendances.size());
-        response.put("courseId", courseId);
+        response.put("courseCode", courseCode);
         response.put("data", attendances);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

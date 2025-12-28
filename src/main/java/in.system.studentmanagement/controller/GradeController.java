@@ -44,68 +44,68 @@ public class GradeController {
         return new ResponseEntity<>(grade, HttpStatus.OK);
     }
 
-    @GetMapping("/student/{studentId}")
-    public ResponseEntity<Object> getGradesByStudent(@PathVariable Long studentId) {
-        List<GradeDTO> grades = gradeService.getGradesByStudentId(studentId);
+    @GetMapping("/student/{studentCode}")
+    public ResponseEntity<Object> getGradesByStudent(@PathVariable String studentCode) {
+        List<GradeDTO> grades = gradeService.getGradesByStudentCode(studentCode);
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("total", grades.size());
-        response.put("studentId", studentId);
-        response.put("averageGrade", gradeService.getStudentAverageGrade(studentId));
+        response.put("studentCode", studentCode);
+        response.put("averageGrade", gradeService.getStudentAverageGradeByCode(studentCode));
         response.put("data", grades);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/student/{studentId}/semester/{semester}")
-    public ResponseEntity<Object> getGradesByStudentAndSemester(@PathVariable Long studentId,
+    @GetMapping("/student/{studentCode}/semester/{semester}")
+    public ResponseEntity<Object> getGradesByStudentAndSemester(@PathVariable String studentCode,
             @PathVariable Integer semester) {
-        List<GradeDTO> grades = gradeService.getGradesByStudentAndSemester(studentId, semester);
-        Double gpa = gradeService.getStudentSemesterGPA(studentId, semester);
+        List<GradeDTO> grades = gradeService.getGradesByStudentCodeAndSemester(studentCode, semester);
+        Double gpa = gradeService.getStudentSemesterGPAByCode(studentCode, semester);
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("total", grades.size());
-        response.put("studentId", studentId);
+        response.put("studentCode", studentCode);
         response.put("semester", semester);
         response.put("semesterGPA", String.format("%.2f", gpa));
         response.put("data", grades);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/course/{courseId}")
-    public ResponseEntity<Object> getGradesByCourse(@PathVariable Long courseId) {
-        List<GradeDTO> grades = gradeService.getGradesByCourseId(courseId);
+    @GetMapping("/course/{courseCode}")
+    public ResponseEntity<Object> getGradesByCourse(@PathVariable String courseCode) {
+        List<GradeDTO> grades = gradeService.getGradesByCourseCode(courseCode);
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("total", grades.size());
-        response.put("courseId", courseId);
+        response.put("courseCode", courseCode);
         response.put("data", grades);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/course/{courseId}/semester/{semester}")
-    public ResponseEntity<Object> getGradesByCourseAndSemester(@PathVariable Long courseId,
+    @GetMapping("/course/{courseCode}/semester/{semester}")
+    public ResponseEntity<Object> getGradesByCourseAndSemester(@PathVariable String courseCode,
             @PathVariable Integer semester) {
-        List<GradeDTO> grades = gradeService.getGradesByCourseAndSemester(courseId, semester);
+        List<GradeDTO> grades = gradeService.getGradesByCourseCodeAndSemester(courseCode, semester);
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("total", grades.size());
-        response.put("courseId", courseId);
+        response.put("courseCode", courseCode);
         response.put("semester", semester);
         response.put("data", grades);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/student/{studentId}/average")
-    public ResponseEntity<Object> getStudentAverageGrade(@PathVariable Long studentId) {
-        Double average = gradeService.getStudentAverageGrade(studentId);
+    @GetMapping("/student/{studentCode}/average")
+    public ResponseEntity<Object> getStudentAverageGrade(@PathVariable String studentCode) {
+        Double average = gradeService.getStudentAverageGradeByCode(studentCode);
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("studentId", studentId);
+        response.put("studentCode", studentCode);
         response.put("averageMarks", String.format("%.2f", average));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("/student/{studentId}/gpa")
-    public ResponseEntity<Object> getStudentGPA(@PathVariable Long studentId,
+    @GetMapping("/student/{studentCode}/gpa")
+    public ResponseEntity<Object> getStudentGPA(@PathVariable String studentCode,
             @RequestParam Integer semester) {
-        Double gpa = gradeService.getStudentSemesterGPA(studentId, semester);
+        Double gpa = gradeService.getStudentSemesterGPAByCode(studentCode, semester);
         Map<String, Object> response = new LinkedHashMap<>();
-        response.put("studentId", studentId);
+        response.put("studentCode", studentCode);
         response.put("semester", semester);
         response.put("gpa", String.format("%.2f", gpa));
         return new ResponseEntity<>(response, HttpStatus.OK);

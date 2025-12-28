@@ -13,15 +13,18 @@ import java.time.LocalDateTime;
 public class GradeDTO {
     private Long id;
 
-    @NotNull(message = "Student ID is required")
     private Long studentId;
+    @NotNull(message = "Student ID is required")
+    private String studentCode;
     private String studentName;
 
-    @NotNull(message = "Course ID is required")
     private Long courseId;
+    @NotNull(message = "Course ID is required")
+    private String courseCode;
     private String courseName;
 
     private Long teacherId;
+    private String teacherCode;
     private String teacherName;
 
     @NotNull(message = "Semester is required")
